@@ -1,0 +1,36 @@
+version: '3.1'
+
+services:
+  db:
+    image: mysql:5.7
+    container_name: my-mysql-db
+    ports:
+      - '3306:3306'
+    environment:
+      MYSQL_ROOT_PASSWORD: root_password
+      MYSQL_DATABASE: my_database
+      MYSQL_USER: user
+      MYSQL_PASSWORD: password
+
+  zabbix-server:
+    image: zabbix/zabbix-server-mysql:latest
+    container_name: zabbix-server
+    ports:
+      - '10050:10050'
+    environment:
+      - ZBX_DB_HOST=my-mysql-db
+      - ZBX_DB_NAME=my_database
+      - ZBX_DB_USER=user
+      - ZBX_DB_PASSWORD=password
+
+  zabbix-web:
+    image: zabbix/zabbix-web-nginx-mysql:latest
+    container_name: zabbix-web
+    ports:
+      - '10051:10051'
+
+  grafana:
+    image: grafana/grafana:latest
+    container_name: grafana
+    ports:
+      - '3000:3000'
